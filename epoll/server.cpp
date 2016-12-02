@@ -48,6 +48,13 @@ void addfd( int epollfd, int fd )
     setnonblocking( fd );
 }
 
+void deletefd(int epollfd,int fd,int state)
+{
+    epoll_event ev;
+    ev.events = state;
+    ev.data.fd = fd;
+    epoll_ctl(epollfd,EPOLL_CTL_DEL,fd,&ev);
+}
 
 void tsocket(int argc, const char * argv[]);
 
@@ -138,6 +145,7 @@ void tsocket(int argc, const char * argv[]){
                     }else{
                         printf("receve:%s\n", sockBuf);
                         write(socketfd,sockBuf,len);
+                        //deletefd(epollfd,fd,EPOLLIN);
                     }
                 }
             }else{
